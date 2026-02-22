@@ -162,48 +162,33 @@
 
 // export default Home;
 
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
   Award,
   Star,
-  ArrowRight,
-  Activity,
-  Droplet,
   Calendar,
   Phone,
   CheckCircle,
+  Clock,
   FileText,
   Shield,
-  Clock,
-  ChevronLeft,
-  ChevronRight,
-  Quote,
   Home as HomeIcon,
   Search,
+  Droplet,
 } from 'lucide-react';
 
-// ── Hero Content ──────────────────────────────────────────────────────────
-const HERO_TITLE = "Your Wellness Partner for Accurate Diagnostics";
+// ── Page Configuration (easy to edit) ──────────────────────────────────────
 const HERO_DESCRIPTION =
   "Experience healthcare excellence with our comprehensive diagnostic services. From routine checkups to specialized tests, we're committed to your health journey with precision, care, and convenience.";
 
 const HERO_IMAGES = [
-  {
-    src: "https://img.rocket.new/generatedImages/rocket_gen_img_1cac3c4b8-1768764885880.png",
-    alt: "Modern medical laboratory with advanced diagnostic equipment",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&q=80&w=1200",
-    alt: "Lab technician examining test samples",
-  },
-  {
-    src: "https://img.rocket.new/generatedImages/rocket_gen_img_1cac3c4b8-1768764885880.png",
-    alt: "Professional clinical sample collection",
-  },
+  "https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&q=80&w=1200",
+  "https://images.unsplash.com/photo-1579684384363-3a4e48e3e0c0?auto=format&fit=crop&q=80&w=1200",
+  "https://images.unsplash.com/photo-1615486511484-92d172cc0d98?auto=format&fit=crop&q=80&w=1200",
 ];
 
-// ── Packages, Features, Steps, Testimonials ───────────────────────────────
 const PACKAGES = [
   {
     id: 1,
@@ -271,39 +256,58 @@ const TESTIMONIALS = [
   { name: "Amit Patel", text: "Best diagnostic center — affordable packages and skilled staff.", rating: 5 },
   { name: "Sneha Reddy", text: "Outstanding experience from booking to report delivery.", rating: 5 },
   { name: "Vikram Singh", text: "Highly professional — perfect for senior citizens.", rating: 5 },
+  { name: "Anjali Verma", text: "Trustworthy lab with friendly staff and clean facilities.", rating: 5 },
+  { name: "Suresh Babu", text: "Very satisfied with the home sample collection process.", rating: 5 },
+  { name: "Meena Rani", text: "Reports are detailed and explained well by the team.", rating: 5 },
+  { name: "Rohit Sharma", text: "Best prices and accurate results every time!", rating: 5 },
+  { name: "Kavita Joshi", text: "Highly recommend for all diagnostic needs.", rating: 5 },
 ];
+
+// ── Animation Variants ─────────────────────────────────────────────────────
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+const staggerChildren = {
+  visible: { transition: { staggerChildren: 0.12 } },
+};
 
 // ────────────────────────────────────────────────────────────────────────────
 
 export default function Home() {
-  const [heroIndex, setHeroIndex] = useState(0);
-  const [testimonialIndex, setTestimonialIndex] = useState(0);
+  const location = useLocation();
 
+  // Smooth scroll to top or anchor on navigation
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (location.hash) {
+      const element = document.querySelector(location.hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [location]);
 
+  const [heroIndex, setHeroIndex] = React.useState(0);
+
+  React.useEffect(() => {
     const interval = setInterval(() => {
       setHeroIndex((prev) => (prev + 1) % HERO_IMAGES.length);
     }, 6000);
-
     return () => clearInterval(interval);
   }, []);
 
-  const currentImage = HERO_IMAGES[heroIndex];
-
-  function handlePrevTestimonial() {
-    setTestimonialIndex((prev) => (prev === 0 ? TESTIMONIALS.length - 1 : prev - 1));
-  }
-
-  function handleNextTestimonial() {
-    setTestimonialIndex((prev) => (prev + 1) % TESTIMONIALS.length);
-  }
-
   return (
     <div className="min-h-screen bg-white">
-
-      {/* ── Hero Section (exactly matching your Rocket layout + single rotating image) ── */}
-      <section className="relative bg-gradient-to-br from-blue-50 via-white to-teal-50 pt-24 lg:pt-32 pb-12 lg:pb-20 overflow-hidden">
+      {/* ── Hero Section (reduced top padding) ──────────────────────────────── */}
+      <motion.section
+        initial="hidden"
+        animate="visible"
+        variants={fadeInUp}
+        className="relative bg-gradient-to-br from-blue-50 via-white to-teal-50 pt-8 lg:pt-12 pb-12 lg:pb-20 overflow-hidden"
+      >
         <div className="absolute inset-0 opacity-5 pointer-events-none">
           <div className="absolute top-20 left-10 w-64 h-64 bg-[#0A7DCF] rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-[#0EB39C] rounded-full blur-3xl" />
@@ -311,12 +315,18 @@ export default function Home() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            {/* Left side - text content */}
+            {/* Left - Text */}
             <div className="text-center lg:text-left">
-              <div className="inline-flex items-center space-x-2 px-4 py-2 bg-[#0A7DCF] bg-opacity-10 rounded-full mb-4 lg:mb-6">
+              {/* Badge - now much closer to top */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center space-x-2 px-4 py-2 bg-[#0A7DCF] bg-opacity-10 rounded-full mb-4 lg:mb-5"
+              >
                 <Award className="w-5 h-5 text-[#0A7DCF]" />
                 <span className="text-sm font-semibold text-[#0A7DCF]">NABL Certified Lab</span>
-              </div>
+              </motion.div>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-4 lg:mb-6 leading-tight">
                 Your Wellness Partner for <span className="text-[#0A7DCF]">Accurate Diagnostics</span>
@@ -326,32 +336,32 @@ export default function Home() {
                 {HERO_DESCRIPTION}
               </p>
 
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-3 sm:space-y-0 sm:space-x-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
                 <Link
                   to="/packages#top"
-                  className="bg-[#0A7DCF] text-white px-8 py-4 rounded-lg font-semibold flex items-center justify-center hover:bg-blue-700 transition"
+                  className="bg-[#0A7DCF] text-white px-8 py-4 rounded-lg font-semibold flex items-center justify-center hover:bg-blue-700 transition w-full sm:w-auto"
                 >
                   <Calendar className="w-5 h-5 mr-2" /> Book Appointment
                 </Link>
                 <button
-                  onClick={() => window.location.href = "tel:+15551234567"}
-                  className="border-2 border-[#0A7DCF] text-[#0A7DCF] px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition flex items-center justify-center"
+                  onClick={() => window.location.href = "tel:+919876543210"}
+                  className="border-2 border-[#0A7DCF] text-[#0A7DCF] px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition flex items-center justify-center w-full sm:w-auto"
                 >
-                  <Phone className="w-5 h-5 mr-2" /> Emergency: +1 555-123-4567
+                  <Phone className="w-5 h-5 mr-2" /> Call: +91 9876543210
                 </button>
               </div>
 
-              <div className="flex items-center justify-center lg:justify-start space-x-6 mt-8">
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 mt-8">
                 <div className="text-center">
                   <div className="text-2xl md:text-3xl font-bold text-[#0A7DCF]">50K+</div>
                   <div className="text-xs md:text-sm text-gray-600">Happy Patients</div>
                 </div>
-                <div className="w-px h-12 bg-gray-300"></div>
+                <div className="w-px h-12 bg-gray-300 hidden sm:block" />
                 <div className="text-center">
                   <div className="text-2xl md:text-3xl font-bold text-[#0EB39C]">500+</div>
                   <div className="text-xs md:text-sm text-gray-600">Tests Available</div>
                 </div>
-                <div className="w-px h-12 bg-gray-300"></div>
+                <div className="w-px h-12 bg-gray-300 hidden sm:block" />
                 <div className="text-center">
                   <div className="text-2xl md:text-3xl font-bold text-[#0A7DCF]">24/7</div>
                   <div className="text-xs md:text-sm text-gray-600">Support</div>
@@ -359,111 +369,137 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right side - single rotating image + badges (exact positioning from your Rocket code) */}
-            <div className="relative mt-8 lg:mt-0">
+            {/* Right - Image + Badges */}
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="relative mt-8 lg:mt-0"
+            >
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <img
                   key={heroIndex}
-                  src={currentImage.src}
-                  alt={currentImage.alt}
+                  src={HERO_IMAGES[heroIndex]}
+                  alt="Diagnostic Lab"
                   className="w-full h-64 md:h-80 lg:h-96 object-cover transition-opacity duration-1000 ease-in-out"
+                  onError={(e) => {
+                    e.currentTarget.src = "https://images.unsplash.com/photo-1584982751601-97dcc096659c?auto=format&fit=crop&q=80&w=1200";
+                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
               </div>
 
               {/* Bottom-left badge */}
-              <div className="absolute -bottom-4 -left-4 lg:-left-8 bg-white rounded-xl shadow-lg p-4 lg:p-6 max-w-xs">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-full bg-teal-100 flex items-center justify-center">
-                    <CheckCircle className="w-6 h-6 lg:w-7 lg:h-7 text-teal-600" />
+              <div className="absolute -bottom-3 -left-3 lg:-left-6 bg-white rounded-xl shadow-lg p-3 lg:p-4 max-w-[180px] lg:max-w-xs">
+                <div className="flex items-center space-x-2 lg:space-x-3">
+                  <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-teal-100 flex items-center justify-center">
+                    <CheckCircle className="w-5 h-5 lg:w-6 lg:h-6 text-teal-600" />
                   </div>
                   <div>
-                    <div className="text-lg lg:text-xl font-bold text-gray-900">99.9%</div>
+                    <div className="text-base lg:text-lg font-bold text-gray-900">99.9%</div>
                     <div className="text-xs lg:text-sm text-gray-600">Accuracy Rate</div>
                   </div>
                 </div>
               </div>
 
               {/* Top-right badge */}
-              <div className="absolute -top-4 -right-4 lg:-right-8 bg-white rounded-xl shadow-lg p-4 lg:p-6 max-w-xs">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 lg:w-16 lg:h-16 rounded-full bg-blue-100 flex items-center justify-center">
-                    <Clock className="w-6 h-6 lg:w-7 lg:h-7 text-[#0A7DCF]" />
+              <div className="absolute -top-3 -right-3 lg:-right-6 bg-white rounded-xl shadow-lg p-3 lg:p-4 max-w-[180px] lg:max-w-xs">
+                <div className="flex items-center space-x-2 lg:space-x-3">
+                  <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-blue-100 flex items-center justify-center">
+                    <Clock className="w-5 h-5 lg:w-6 lg:h-6 text-[#0A7DCF]" />
                   </div>
                   <div>
-                    <div className="text-lg lg:text-xl font-bold text-gray-900">24 Hours</div>
+                    <div className="text-base lg:text-lg font-bold text-gray-900">24 Hours</div>
                     <div className="text-xs lg:text-sm text-gray-600">Report Delivery</div>
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* ── Popular Packages ──────────────────────────────────────────────────── */}
-      <section className="py-16 lg:py-20 bg-white">
+      {/* ── Popular Health Packages (fixed Popular badge overlap) ─────────────── */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={staggerChildren}
+        className="py-16 lg:py-20 bg-white"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl lg:text-5xl font-bold text-center mb-4">Popular Health Packages</h2>
           <p className="text-center text-lg text-gray-600 mb-12 max-w-3xl mx-auto">
             Choose from our carefully curated diagnostic packages designed for comprehensive health monitoring and early detection
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
             {PACKAGES.map((pkg) => (
-              <div
+              <motion.div
                 key={pkg.id}
-                className={`relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 pt-10 ${
+                variants={fadeInUp}
+                className={`relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 min-h-[320px] flex flex-col ${
                   pkg.popular ? 'border-teal-200 bg-teal-50/20' : ''
                 }`}
               >
                 {pkg.popular && (
-                  <div className="absolute top-4 right-4 z-10">
-                    <span className="bg-teal-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                  <div className="absolute top-3 right-3 z-10">
+                    <span className="bg-teal-500 text-white text-xs font-bold px-2.5 py-0.5 rounded-full shadow-sm">
                       Popular
                     </span>
                   </div>
                 )}
 
-                <div className="p-6 lg:p-8">
-                  <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3 line-clamp-1">
+                <div className="p-5 lg:p-6 flex flex-col flex-grow pt-10 lg:pt-12">
+                  <h3 className="text-lg lg:text-xl font-bold text-gray-900 mb-2 line-clamp-2">
                     {pkg.name}
                   </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed">
+                  <p className="text-sm lg:text-base text-gray-600 mb-4 flex-grow line-clamp-3">
                     {pkg.description}
                   </p>
 
-                  <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center justify-between mb-4">
                     <div>
-                      <span className="text-3xl lg:text-4xl font-bold text-[#0A7DCF]">
+                      <span className="text-xl lg:text-2xl font-bold text-[#0A7DCF]">
                         ₹{pkg.price.toLocaleString()}
                       </span>
-                      <span className="text-sm text-gray-500 line-through ml-3">
+                      <span className="text-sm lg:text-base text-gray-500 line-through ml-2">
                         ₹{pkg.originalPrice.toLocaleString()}
                       </span>
                     </div>
-                    <span className="text-green-600 font-semibold">{pkg.discount}% OFF</span>
+                    <span className="text-green-600 font-semibold text-sm lg:text-base">{pkg.discount}% OFF</span>
                   </div>
 
-                  <div className="text-sm text-gray-600 mb-6">
-                    Includes <span className="font-semibold text-gray-900">{pkg.tests} tests</span>
+                  <div className="text-xs lg:text-sm text-gray-600 mb-4 space-y-1">
+                    {pkg.features.map((f, i) => (
+                      <div key={i} className="flex items-center gap-1.5">
+                        <CheckCircle className="w-3.5 h-3.5 text-green-500" />
+                        <span>{f}</span>
+                      </div>
+                    ))}
                   </div>
 
                   <Link
                     to="/packages#top"
-                    className="block w-full bg-[#0EB39C] text-white py-3.5 rounded-lg font-medium text-center hover:bg-teal-700 transition"
+                    className="mt-auto block w-full bg-[#0EB39C] text-white py-3 rounded-lg font-medium text-center hover:bg-teal-700 transition text-sm lg:text-base"
                   >
                     Book Now
                   </Link>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* ── Why Choose Us ─────────────────────────────────────────────────────── */}
-      <section className="py-16 lg:py-20 bg-gray-50">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={staggerChildren}
+        className="py-16 lg:py-20 bg-gray-50"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl lg:text-5xl font-bold text-center mb-12">Your Trusted Healthcare Partner</h2>
           <p className="text-center text-lg text-gray-600 mb-16 max-w-3xl mx-auto">
@@ -472,8 +508,9 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {FEATURES.map((f, i) => (
-              <div
+              <motion.div
                 key={i}
+                variants={fadeInUp}
                 className="bg-white rounded-2xl p-6 lg:p-8 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center mb-5">
@@ -481,14 +518,20 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">{f.title}</h3>
                 <p className="text-gray-600 leading-relaxed">{f.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* ── How It Works (classic Rocket style) ──────────────────────────────── */}
-      <section className="py-16 lg:py-20 bg-white relative">
+      {/* ── How It Works ──────────────────────────────────────────────────────── */}
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={staggerChildren}
+        className="py-16 lg:py-20 bg-white"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">How It Works</h2>
@@ -497,12 +540,13 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Gradient line (desktop only) */}
-          <div className="hidden lg:block absolute top-1/2 left-8 right-8 h-1 bg-gradient-to-r from-[#0A7DCF] via-[#0EB39C] to-[#0EB39C] opacity-30 -translate-y-1/2 z-0" />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {STEPS.map((step, index) => (
-              <div key={index} className="relative">
+              <motion.div
+                key={index}
+                variants={fadeInUp}
+                className="relative"
+              >
                 <div className="bg-white rounded-2xl p-6 lg:p-8 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 text-center">
                   <div className="relative inline-block mb-6">
                     <div
@@ -522,63 +566,52 @@ export default function Home() {
                   <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
                   <p className="text-gray-600 leading-relaxed">{step.desc}</p>
                 </div>
-
-                {/* Arrow between steps (desktop only) */}
-                {index < STEPS.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-6 transform -translate-y-1/2 z-20">
-                    <ArrowRight className="w-8 h-8 text-[#0A7DCF]" />
-                  </div>
-                )}
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* ── Testimonials ──────────────────────────────────────────────────────── */}
-      <section className="py-16 lg:py-20 bg-gray-50">
+      <motion.section
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        className="py-16 lg:py-20 bg-gray-50 overflow-hidden"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">What Our Patients Say</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Read testimonials from our satisfied patients who trust us with their healthcare needs
+              Real experiences from patients who trust us with their health
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 lg:p-12">
-            <div className="flex justify-center mb-6">
-              {Array(TESTIMONIALS[testimonialIndex].rating)
-                .fill(0)
-                .map((_, i) => (
-                  <Star key={i} className="w-7 h-7 text-yellow-400 fill-current mx-1" />
-                ))}
+          <div className="relative overflow-hidden">
+            <div className="flex animate-marquee gap-6 py-4">
+              {TESTIMONIALS.concat(TESTIMONIALS).map((t, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: 100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: i * 0.1 }}
+                  className="flex-shrink-0 w-80 bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all duration-300"
+                >
+                  <div className="flex justify-center mb-4">
+                    {Array(t.rating)
+                      .fill(0)
+                      .map((_, star) => (
+                        <Star key={star} className="w-5 h-5 text-yellow-400 fill-current mx-0.5" />
+                      ))}
+                  </div>
+                  <p className="text-gray-700 italic mb-4 line-clamp-4">"{t.text}"</p>
+                  <p className="text-right font-semibold text-gray-900">{t.name}</p>
+                </motion.div>
+              ))}
             </div>
-
-            <p className="text-xl lg:text-2xl text-gray-800 italic text-center mb-8 leading-relaxed">
-              "{TESTIMONIALS[testimonialIndex].text}"
-            </p>
-
-            <p className="text-center font-bold text-lg">{TESTIMONIALS[testimonialIndex].name}</p>
-          </div>
-
-          <div className="flex justify-center gap-6 mt-10">
-            <button
-              onClick={handlePrevTestimonial}
-              className="p-4 rounded-full bg-white shadow-md hover:bg-gray-100 transition"
-              aria-label="Previous testimonial"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-            <button
-              onClick={handleNextTestimonial}
-              className="p-4 rounded-full bg-white shadow-md hover:bg-gray-100 transition"
-              aria-label="Next testimonial"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
           </div>
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 }

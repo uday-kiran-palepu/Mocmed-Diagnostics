@@ -1,4 +1,3 @@
-// src/pages/components/TestCard.tsx
 import React from 'react';
 import { Clock, Droplet, AlertCircle, Info } from 'lucide-react';
 
@@ -7,6 +6,7 @@ interface Test {
   name: string;
   description: string;
   price: number;
+  originalPrice?: number; // ← Added optional original price
   duration: string;
   sampleType: string;
   fasting: boolean;
@@ -20,6 +20,11 @@ interface Props {
 }
 
 const TestCard: React.FC<Props> = ({ test, isSelected, onToggle, onInfoClick }) => {
+  // Calculate discount percentage if originalPrice exists
+  const discountPercent = test.originalPrice && test.originalPrice > test.price
+    ? Math.round(((test.originalPrice - test.price) / test.originalPrice) * 100)
+    : 0;
+
   return (
     <div
       className={`border-2 rounded-xl p-5 transition-all duration-300 ${
@@ -59,12 +64,26 @@ const TestCard: React.FC<Props> = ({ test, isSelected, onToggle, onInfoClick }) 
         )}
       </div>
 
-      <div className="flex items-center justify-between">
-        <div>
-          <span className="text-xl md:text-2xl font-bold text-blue-600">
-            ₹{test.price.toLocaleString()}
-          </span>
+      {/* Updated Price Section – matches your screenshot style */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex flex-col items-start">
+          <div className="flex items-baseline gap-2">
+            <span className="text-xl md:text-2xl font-bold text-[#0A7DCF]">
+              ₹{test.price.toLocaleString()}
+            </span>
+            {test.originalPrice && test.originalPrice > test.price && (
+              <span className="text-sm md:text-base text-gray-500 line-through">
+                ₹{test.originalPrice.toLocaleString()}
+              </span>
+            )}
+          </div>
+          {discountPercent > 0 && (
+            <span className="text-sm md:text-base font-medium text-green-600">
+              {discountPercent}% OFF
+            </span>
+          )}
         </div>
+
         <button
           onClick={onToggle}
           className={`px-5 py-2 rounded-lg font-medium transition-all duration-300 text-sm ${

@@ -58,7 +58,505 @@
 
 // export default CustomPackage;
 
-// src/pages/CustomPackage.tsx
+
+
+// import React, { useState, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import SearchBar from './components/SearchBar';
+// import CategoryFilter from './components/CategoryFilter';
+// import TestCard from './components/TestCard';
+// import SelectedTestsSidebar from './components/SelectedTestsSidebar';
+// import RecommendationSection from './components/RecommendationSection';
+// import TestInfoModal from './components/TestInfoModal';
+// import {
+//   Search,
+//   SlidersHorizontal,
+//   X,
+//   Star,
+//   TrendingUp,
+//   Clock,
+//   Droplet,
+//   Coffee,
+//   CheckCircle,
+//   Home,
+//   TestTube,
+//   Sparkles,
+//   ArrowRight,
+// } from 'lucide-react';
+
+// // ── Test Data ───────────────────────────────────────────────────────────────
+// const tests = [
+//   { id: 'cbc', name: 'Complete Blood Count (CBC)', description: 'Full blood cell analysis', price: 350, duration: '6 hours', sampleType: 'Blood', category: 'blood', fasting: false },
+//   { id: 'lft', name: 'Liver Function Test (LFT)', description: 'Liver enzymes & proteins', price: 550, duration: '12 hours', sampleType: 'Blood', category: 'blood', fasting: true },
+//   { id: 'kft', name: 'Kidney Function Test (KFT)', description: 'Kidney health markers', price: 500, duration: '12 hours', sampleType: 'Blood', category: 'blood', fasting: true },
+//   { id: 'iron', name: 'Iron Studies', description: 'Iron, ferritin & TIBC', price: 700, duration: '24 hours', sampleType: 'Blood', category: 'blood', fasting: true },
+//   { id: 'thyroid', name: 'Thyroid Profile (T3,T4,TSH)', description: 'Thyroid hormone levels', price: 450, duration: '24 hours', sampleType: 'Blood', category: 'thyroid', fasting: true },
+//   { id: 'vitd', name: 'Vitamin D Test', description: 'Vitamin D level for bones & immunity', price: 800, duration: '24 hours', sampleType: 'Blood', category: 'vitamin', fasting: false },
+//   { id: 'vitb12', name: 'Vitamin B12 Test', description: 'B12 for nerves & blood cells', price: 600, duration: '24 hours', sampleType: 'Blood', category: 'vitamin', fasting: true },
+//   { id: 'hba1c', name: 'HbA1c', description: '3-month average blood sugar', price: 400, duration: '24 hours', sampleType: 'Blood', category: 'diabetes', fasting: false },
+//   { id: 'fbs', name: 'Fasting Blood Sugar (FBS)', description: 'Fasting glucose level', price: 100, duration: '2 hours', sampleType: 'Blood', category: 'diabetes', fasting: true },
+//   { id: 'lipid', name: 'Lipid Profile', description: 'Cholesterol & triglycerides', price: 500, duration: '12 hours', sampleType: 'Blood', category: 'cardiac', fasting: true },
+//   { id: 'cardiac', name: 'Cardiac Risk Markers', description: 'hs-CRP, homocysteine', price: 1200, duration: '24 hours', sampleType: 'Blood', category: 'cardiac', fasting: true },
+//   { id: 'uric', name: 'Uric Acid Test', description: 'Gout & kidney stone risk', price: 250, duration: '6 hours', sampleType: 'Blood', category: 'blood', fasting: true },
+//   { id: 'psa', name: 'PSA (Prostate Specific Antigen)', description: 'Prostate health screening', price: 650, duration: '24 hours', sampleType: 'Blood', category: 'cancer', fasting: false },
+//   { id: 'ca125', name: 'CA-125', description: 'Ovarian cancer marker', price: 900, duration: '24 hours', sampleType: 'Blood', category: 'cancer', fasting: false },
+//   { id: 'crp', name: 'C-Reactive Protein (CRP)', description: 'Inflammation marker', price: 400, duration: '12 hours', sampleType: 'Blood', category: 'infection', fasting: false },
+//   { id: 'iga', name: 'IgE (Allergy Panel)', description: 'Allergy screening', price: 1200, duration: '48 hours', sampleType: 'Blood', category: 'allergy', fasting: false },
+//   { id: 'beta-hcg', name: 'Beta-hCG', description: 'Pregnancy confirmation', price: 350, duration: '6 hours', sampleType: 'Blood', category: 'pregnancy', fasting: false },
+//   { id: 'calcium', name: 'Calcium & Bone Profile', description: 'Bone health markers', price: 600, duration: '12 hours', sampleType: 'Blood', category: 'bone', fasting: true },
+// ];
+
+// // ── Dummy Labs with random additional fees ────────────────────────────────
+// const labs = [
+//   { id: '1', name: 'Apollo Diagnostics', location: 'Mumbai Central', rating: 4.8, extraFee: 200 },
+//   { id: '2', name: 'Dr. Lal PathLabs', location: 'Delhi NCR', rating: 4.7, extraFee: 150 },
+//   { id: '3', name: 'Thyrocare', location: 'Bangalore', rating: 4.6, extraFee: 100 },
+//   { id: '4', name: 'SRL Diagnostics', location: 'Hyderabad', rating: 4.5, extraFee: 250 },
+//   { id: '5', name: 'Metropolis Healthcare', location: 'Pune', rating: 4.9, extraFee: 300 },
+//   { id: '6', name: 'Pathkind Labs', location: 'Chennai', rating: 4.4, extraFee: 180 },
+//   { id: '7', name: 'Redcliffe Labs', location: 'Kolkata', rating: 4.6, extraFee: 220 },
+//   { id: '8', name: 'Healthians', location: 'Ahmedabad', rating: 4.7, extraFee: 120 },
+//   { id: '9', name: '1mg Labs', location: 'Jaipur', rating: 4.5, extraFee: 280 },
+//   { id: '10', name: 'Orange Health Labs', location: 'Lucknow', rating: 4.8, extraFee: 160 },
+// ];
+
+// const CustomPackage = () => {
+//   const navigate = useNavigate();
+//   const [selectedTests, setSelectedTests] = useState<string[]>([]);
+//   const [activeCategory, setActiveCategory] = useState('all');
+//   const [searchQuery, setSearchQuery] = useState('');
+//   const [filteredTests, setFilteredTests] = useState(tests);
+//   const [suggestions, setSuggestions] = useState([]);
+//   const [selectedTestInfo, setSelectedTestInfo] = useState(null);
+//   const [showInfoModal, setShowInfoModal] = useState(false);
+//   const [showLabSelection, setShowLabSelection] = useState(false);
+//   const [selectedLab, setSelectedLab] = useState(null);
+//   const [showBookingConfirmation, setShowBookingConfirmation] = useState(false);
+
+//   // ── Categories ─────────────────────────────────────────────────────────────
+//   const categories = [
+//     { id: 'all', name: 'All Tests', count: tests.length },
+//     ...[...new Set(tests.map(t => t.category))].map(cat => ({
+//       id: cat,
+//       name: cat.charAt(0).toUpperCase() + cat.slice(1),
+//       count: tests.filter(t => t.category === cat).length,
+//     })),
+//   ];
+
+//   // ── Filter Tests ───────────────────────────────────────────────────────────
+//   useEffect(() => {
+//     let result = tests;
+//     if (activeCategory !== 'all') {
+//       result = result.filter(t => t.category === activeCategory);
+//     }
+//     if (searchQuery.trim()) {
+//       const q = searchQuery.toLowerCase();
+//       result = result.filter(t =>
+//         t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q)
+//       );
+//     }
+//     setFilteredTests(result);
+//   }, [activeCategory, searchQuery]);
+
+//   const handleSearch = (query) => {
+//     setSearchQuery(query);
+//     if (query.trim()) {
+//       const q = query.toLowerCase();
+//       const results = tests.filter(t =>
+//         t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q)
+//       ).slice(0, 5);
+//       setSuggestions(results);
+//     } else {
+//       setSuggestions([]);
+//     }
+//   };
+
+//   const handleSuggestionClick = (test) => {
+//     if (!selectedTests.includes(test.id)) {
+//       setSelectedTests([...selectedTests, test.id]);
+//     }
+//     setSearchQuery('');
+//     setSuggestions([]);
+//   };
+
+//   const handleTestToggle = (testId) => {
+//     setSelectedTests(prev =>
+//       prev.includes(testId) ? prev.filter(id => id !== testId) : [...prev, testId]
+//     );
+//   };
+
+//   const handleRemoveTest = (testId) => {
+//     setSelectedTests(prev => prev.filter(id => id !== testId));
+//   };
+
+//   const handleClearAll = () => {
+//     setSelectedTests([]);
+//   };
+
+//   const handleProceedNext = () => {
+//     if (selectedTests.length === 0) {
+//       alert('Please select at least one test');
+//       return;
+//     }
+//     setShowLabSelection(true);
+//   };
+
+//   const handleLabSelect = (lab) => {
+//     setSelectedLab(lab);
+//   };
+
+//   const handleBookTests = () => {
+//     if (!selectedLab) {
+//       alert('Please select a lab first');
+//       return;
+//     }
+//     setShowLabSelection(false);
+//     setShowBookingConfirmation(true);
+//   };
+
+//   const getTotalTestsPrice = () => {
+//     return selectedTests.reduce((sum, id) => {
+//       const test = tests.find(t => t.id === id);
+//       return sum + (test ? test.price : 0);
+//     }, 0);
+//   };
+
+//   const getRecommendations = () => {
+//     return tests
+//       .filter(t => !selectedTests.includes(t.id))
+//       .slice(0, 3)
+//       .map(t => ({ ...t, reason: 'Commonly added with your selections' }));
+//   };
+
+//   const handleTestInfo = (test) => {
+//     setSelectedTestInfo(test);
+//     setShowInfoModal(true);
+//   };
+
+//   // ── Helper: Format price with discount style like screenshot ───────────────
+//   const renderPrice = (currentPrice, originalPrice = null) => {
+//     if (!originalPrice || originalPrice <= currentPrice) {
+//       return (
+//         <span className="text-xl md:text-2xl font-bold text-[#0A7DCF]">
+//           ₹{currentPrice.toLocaleString()}
+//         </span>
+//       );
+//     }
+
+//     const discountPercent = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+
+//     return (
+//       <div className="flex flex-col items-start">
+//         <div className="flex items-baseline gap-2">
+//           <span className="text-xl md:text-2xl font-bold text-[#0A7DCF]">
+//             ₹{currentPrice.toLocaleString()}
+//           </span>
+//           <span className="text-sm md:text-base text-gray-500 line-through">
+//             ₹{originalPrice.toLocaleString()}
+//           </span>
+//         </div>
+//         <span className="text-sm md:text-base font-medium text-green-600">
+//           {discountPercent}% OFF
+//         </span>
+//       </div>
+//     );
+//   };
+
+//   // ── Booking Confirmation Page ──────────────────────────────────────────────
+//   if (showBookingConfirmation) {
+//     const testsTotal = getTotalTestsPrice();
+//     const labFee = selectedLab.extraFee || 0;
+//     const totalBeforeDiscount = testsTotal + labFee;
+//     const discountPercent = Math.floor(Math.random() * 11) + 5; // 5–15%
+//     const discountAmount = Math.round(totalBeforeDiscount * (discountPercent / 100));
+//     const finalAmount = totalBeforeDiscount - discountAmount;
+
+//     return (
+//       <div className="min-h-screen bg-gray-50 py-12">
+//         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+//           <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10">
+//             {/* Success Message */}
+//             <div className="text-center mb-10">
+//               <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
+//                 <CheckCircle className="w-12 h-12 text-green-600" />
+//               </div>
+//               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+//                 Booking Confirmed!
+//               </h1>
+//               <p className="text-lg text-gray-600">
+//                 Thank you for choosing us. Your booking has been recorded successfully.
+//               </p>
+//             </div>
+
+//             {/* Selected Lab */}
+//             <div className="bg-gray-50 rounded-xl p-6 mb-8">
+//               <h2 className="text-2xl font-bold text-gray-900 mb-4">Selected Lab</h2>
+//               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+//                 <div>
+//                   <h3 className="text-xl font-semibold">{selectedLab.name}</h3>
+//                   <p className="text-gray-600">{selectedLab.location}</p>
+//                   <div className="flex items-center mt-2">
+//                     <Star className="w-5 h-5 text-yellow-400 fill-current" />
+//                     <span className="ml-1 font-medium">{selectedLab.rating}</span>
+//                   </div>
+//                 </div>
+//                 <div className="text-right">
+//                   <p className="text-sm text-gray-600">Lab Service Fee</p>
+//                   <p className="text-xl font-bold text-[#0A7DCF]">₹{labFee.toLocaleString()}</p>
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Selected Tests */}
+//             <div className="mb-8">
+//               <h2 className="text-2xl font-bold text-gray-900 mb-4">Selected Tests</h2>
+//               <div className="space-y-4">
+//                 {selectedTests.map(id => {
+//                   const test = tests.find(t => t.id === id);
+//                   if (!test) return null;
+//                   return (
+//                     <div key={id} className="flex justify-between items-center border-b pb-3">
+//                       <div>
+//                         <p className="font-medium">{test.name}</p>
+//                         <p className="text-sm text-gray-600">{test.description}</p>
+//                       </div>
+//                       {renderPrice(test.price, test.price * 2)}
+//                     </div>
+//                   );
+//                 })}
+//               </div>
+//             </div>
+
+//             {/* Pricing Summary */}
+//             <div className="bg-gray-50 rounded-xl p-6 mb-10">
+//               <h2 className="text-2xl font-bold text-gray-900 mb-6">Payment Summary</h2>
+//               <div className="space-y-4">
+//                 <div className="flex justify-between text-lg">
+//                   <span>Tests Total:</span>
+//                   <span>₹{testsTotal.toLocaleString()}</span>
+//                 </div>
+//                 <div className="flex justify-between text-lg">
+//                   <span>Lab Service Fee:</span>
+//                   <span>₹{labFee.toLocaleString()}</span>
+//                 </div>
+//                 <div className="flex justify-between text-lg font-bold border-t pt-4">
+//                   <span>Total Before Discount:</span>
+//                   <span>₹{totalBeforeDiscount.toLocaleString()}</span>
+//                 </div>
+//                 <div className="flex justify-between text-lg text-green-600">
+//                   <span>Discount ({discountPercent}%):</span>
+//                   <span>-₹{discountAmount.toLocaleString()}</span>
+//                 </div>
+//                 <div className="flex justify-between text-2xl font-bold border-t pt-4">
+//                   <span>Final Amount:</span>
+//                   <span className="text-[#0EB39C]">₹{finalAmount.toLocaleString()}</span>
+//                 </div>
+//               </div>
+//             </div>
+
+//             {/* Action Buttons */}
+//             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+//               <button
+//                 onClick={() => {
+//                   alert("Payment gateway simulation: Payment of ₹" + finalAmount + " successful!");
+//                   navigate('/');
+//                 }}
+//                 className="bg-[#0EB39C] text-white px-10 py-4 rounded-xl font-bold hover:bg-green-700 transition"
+//               >
+//                 Proceed to Pay ₹{finalAmount.toLocaleString()}
+//               </button>
+
+//               <button
+//                 onClick={() => {
+//                   setShowBookingConfirmation(false);
+//                   setSelectedLab(null);
+//                 }}
+//                 className="px-10 py-4 bg-gray-200 text-gray-800 rounded-xl font-bold hover:bg-gray-300 transition"
+//               >
+//                 Back to Lab Selection
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   // ── Lab Selection Screen ───────────────────────────────────────────────────
+//   if (showLabSelection) {
+//     const testsTotal = getTotalTestsPrice();
+
+//     return (
+//       <div className="min-h-screen bg-gray-50 py-12">
+//         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+//           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-10 text-center">
+//             Choose a Lab
+//           </h1>
+
+//           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+//             {labs.map(lab => {
+//               const finalAmount = testsTotal + lab.extraFee;
+//               const discountPercent = Math.floor(Math.random() * 11) + 5;
+//               const discountAmount = Math.round(finalAmount * (discountPercent / 100));
+//               const payable = finalAmount - discountAmount;
+
+//               return (
+//                 <div
+//                   key={lab.id}
+//                   onClick={() => handleLabSelect(lab)}
+//                   className={`p-6 bg-white rounded-xl shadow-md border-2 cursor-pointer transition-all hover:shadow-lg ${
+//                     selectedLab?.id === lab.id
+//                       ? 'border-blue-600 bg-blue-50'
+//                       : 'border-gray-200 hover:border-blue-300'
+//                   }`}
+//                 >
+//                   <h3 className="text-lg font-bold text-gray-900 mb-2">{lab.name}</h3>
+//                   <p className="text-sm text-gray-600 mb-2">{lab.location}</p>
+//                   <div className="flex items-center mb-3">
+//                     <Star className="w-4 h-4 text-yellow-400 fill-current" />
+//                     <span className="ml-1 text-sm font-medium">{lab.rating}</span>
+//                   </div>
+
+//                   <div className="mt-4 pt-4 border-t">
+//                     <p className="text-sm text-gray-600">Tests Total</p>
+//                     <p className="text-lg font-bold text-gray-900">₹{testsTotal.toLocaleString()}</p>
+
+//                     <p className="text-sm text-gray-600 mt-2">Lab Fee</p>
+//                     <p className="text-lg font-bold text-gray-900">₹{lab.extraFee.toLocaleString()}</p>
+
+//                     <p className="text-sm text-gray-600 mt-2">Final Amount</p>
+//                     <p className="text-xl font-bold text-[#0A7DCF]">₹{finalAmount.toLocaleString()}</p>
+
+//                     <p className="text-sm text-green-600 mt-1">
+//                       {discountPercent}% OFF → Save ₹{discountAmount.toLocaleString()}
+//                     </p>
+//                     <p className="text-base font-bold text-green-700 mt-1">
+//                       Pay only ₹{payable.toLocaleString()}
+//                     </p>
+//                   </div>
+//                 </div>
+//               );
+//             })}
+//           </div>
+
+//           <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4">
+//             <button
+//               onClick={handleBookTests}
+//               disabled={!selectedLab}
+//               className={`px-10 py-4 rounded-xl font-bold text-white transition ${
+//                 selectedLab
+//                   ? 'bg-blue-600 hover:bg-blue-700'
+//                   : 'bg-gray-400 cursor-not-allowed'
+//               }`}
+//             >
+//               Proceed to Book the Tests
+//             </button>
+
+//             <button
+//               onClick={() => setShowLabSelection(false)}
+//               className="px-10 py-4 bg-gray-200 text-gray-800 rounded-xl font-bold hover:bg-gray-300 transition"
+//             >
+//               Back to Tests
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   // ── Main Page ──────────────────────────────────────────────────────────────
+//   return (
+//     <div className="min-h-screen bg-gray-50 py-12">
+//       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+//         <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-12 text-center">
+//           Build Your Custom Health Package
+//         </h1>
+
+//         {/* Search */}
+//         <SearchBar
+//           onSearch={handleSearch}
+//           suggestions={suggestions}
+//           onSuggestionClick={handleSuggestionClick}
+//         />
+
+//         {/* Categories */}
+//         <div className="mb-10">
+//           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-5">
+//             Browse by Category
+//           </h2>
+//           <div className="flex flex-wrap gap-3">
+//             {categories.map(cat => (
+//               <button
+//                 key={cat.id}
+//                 onClick={() => setActiveCategory(cat.id)}
+//                 className={`px-5 py-2.5 rounded-full font-medium transition-all ${
+//                   activeCategory === cat.id
+//                     ? 'bg-blue-600 text-white shadow-md'
+//                     : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
+//                 }`}
+//               >
+//                 {cat.name} ({cat.count})
+//               </button>
+//             ))}
+//           </div>
+//         </div>
+
+//         {/* Recommendations */}
+//         {selectedTests.length > 0 && (
+//           <RecommendationSection
+//             recommendations={getRecommendations()}
+//             onAddTest={(test) => handleTestToggle(test.id)}
+//           />
+//         )}
+
+//         {/* Test Grid */}
+//         <div className="lg:grid lg:grid-cols-4 lg:gap-8">
+//           <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 lg:mb-0">
+//             {filteredTests.length === 0 ? (
+//               <div className="col-span-full text-center py-20 text-gray-600 text-lg">
+//                 No tests found matching your search or category.
+//               </div>
+//             ) : (
+//               filteredTests.map(test => (
+//                 <TestCard
+//                   key={test.id}
+//                   test={{
+//                     ...test,
+//                     originalPrice: test.price * 2, // Simulate discount
+//                   }}
+//                   isSelected={selectedTests.includes(test.id)}
+//                   onToggle={() => handleTestToggle(test.id)}
+//                   onInfoClick={() => handleTestInfo(test)}
+//                   renderPrice={renderPrice} // Pass the helper function
+//                 />
+//               ))
+//             )}
+//           </div>
+
+//           {/* Sidebar */}
+//           <div className="lg:col-span-1 sticky top-24 self-start">
+//             <SelectedTestsSidebar
+//               selectedTests={selectedTests.map(id => tests.find(t => t.id === id))}
+//               onRemoveTest={handleRemoveTest}
+//               onClearAll={handleClearAll}
+//               onProceed={handleProceedNext}
+//             />
+//           </div>
+//         </div>
+//       </div>
+
+//       <TestInfoModal
+//         test={selectedTestInfo}
+//         isOpen={showInfoModal}
+//         onClose={() => setShowInfoModal(false)}
+//       />
+//     </div>
+//   );
+// };
+
+// export default CustomPackage;
+
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from './components/SearchBar';
@@ -66,288 +564,57 @@ import CategoryFilter from './components/CategoryFilter';
 import TestCard from './components/TestCard';
 import SelectedTestsSidebar from './components/SelectedTestsSidebar';
 import RecommendationSection from './components/RecommendationSection';
-import PopularCombinations from './components/PopularCombinations';
 import TestInfoModal from './components/TestInfoModal';
+import {
+  Search,
+  SlidersHorizontal,
+  X,
+  Star,
+  TrendingUp,
+  Clock,
+  Droplet,
+  Coffee,
+  CheckCircle,
+  Home,
+  TestTube,
+  Sparkles,
+  ArrowRight,
+} from 'lucide-react';
 
-// Expanded dummy tests data
+// ── Test Data ───────────────────────────────────────────────────────────────
 const tests = [
-  {
-    id: 'cbc',
-    name: 'Complete Blood Count (CBC)',
-    description: 'Comprehensive blood analysis measuring red cells, white cells, and platelets',
-    fullDescription: `Complete Blood Count (CBC) is one of the most common blood tests that provides important information about the types and numbers of cells in your blood, especially red blood cells, white blood cells, and platelets. This test helps doctors check for various disorders including anemia, infection, and many other diseases.`,
-    clinicalSignificance: `CBC is essential for diagnosing conditions such as anemia, infections, blood clotting problems, blood cancers, and immune system disorders. It provides baseline health information and helps monitor the effectiveness of treatments.`,
-    preparation: [
-      'No fasting required for standard CBC',
-      'Inform your doctor about any medications you are taking',
-      'Stay hydrated before the test',
-      'Wear comfortable clothing with easy arm access',
-    ],
-    normalRange: 'RBC: 4.5-5.5 million cells/mcL, WBC: 4,500-11,000 cells/mcL, Platelets: 150,000-400,000/mcL',
-    price: 350,
-    originalPrice: 500,
-    duration: '6 hours',
-    sampleType: 'Blood',
-    category: 'blood',
-    fasting: false,
-  },
-  {
-    id: 'thyroid',
-    name: 'Thyroid Profile (T3, T4, TSH)',
-    description: 'Complete thyroid function assessment for metabolism and hormone balance',
-    fullDescription: `Thyroid Profile test measures the levels of thyroid hormones T3, T4, and TSH in your blood. These hormones regulate metabolism, energy levels, and overall body function. This comprehensive test helps diagnose thyroid disorders including hypothyroidism and hyperthyroidism.`,
-    clinicalSignificance: `Essential for diagnosing thyroid disorders that affect metabolism, weight, energy levels, mood, and overall health. Helps monitor thyroid medication effectiveness and detect autoimmune thyroid conditions.`,
-    preparation: [
-      'Fasting for 8-12 hours recommended',
-      'Take thyroid medication after the test if prescribed',
-      'Inform about biotin supplements (stop 2 days before)',
-      'Schedule test in the morning for accurate TSH levels',
-    ],
-    normalRange: 'TSH: 0.4-4.0 mIU/L, T3: 80-200 ng/dL, T4: 5-12 mcg/dL',
-    price: 450,
-    originalPrice: 650,
-    duration: '24 hours',
-    sampleType: 'Blood',
-    category: 'hormone',
-    fasting: true,
-  },
-  {
-    id: 'lipid',
-    name: 'Lipid Profile',
-    description: 'Cholesterol and triglycerides measurement for heart health assessment',
-    fullDescription: `Lipid Profile is a comprehensive test that measures cholesterol levels including total cholesterol, LDL (bad cholesterol), HDL (good cholesterol), and triglycerides. This test is crucial for assessing cardiovascular disease risk and monitoring heart health.`,
-    clinicalSignificance: `Critical for evaluating risk of heart disease, stroke, and atherosclerosis. Helps guide treatment decisions for cholesterol management and monitors effectiveness of lifestyle changes or medications.`,
-    preparation: [
-      'Fasting for 9-12 hours is mandatory',
-      'Only water is allowed during fasting period',
-      'Avoid alcohol for 24 hours before test',
-      'Continue regular medications unless advised otherwise',
-    ],
-    normalRange: 'Total Cholesterol: <200 mg/dL, LDL: <100 mg/dL, HDL: >40 mg/dL, Triglycerides: <150 mg/dL',
-    price: 500,
-    originalPrice: 700,
-    duration: '12 hours',
-    sampleType: 'Blood',
-    category: 'cardiac',
-    fasting: true,
-  },
-  {
-    id: 'hba1c',
-    name: 'HbA1c (Glycated Hemoglobin)',
-    description: 'Long-term blood sugar control indicator for diabetes management',
-    fullDescription: `HbA1c test measures your average blood sugar levels over the past 2-3 months. It shows the percentage of hemoglobin proteins in your blood that are coated with sugar. This test is the gold standard for monitoring diabetes control and diagnosing diabetes.`,
-    clinicalSignificance: `Essential for diabetes diagnosis and monitoring long-term blood sugar control. Helps assess risk of diabetes complications and guides treatment adjustments. Unlike daily glucose tests, HbA1c provides a comprehensive picture of blood sugar management.`,
-    preparation: [
-      'No fasting required',
-      'Can be done at any time of day',
-      'Continue regular medications and meals',
-      'Results not affected by recent food intake',
-    ],
-    normalRange: 'Normal: <5.7%, Prediabetes: 5.7-6.4%, Diabetes: ≥6.5%',
-    price: 400,
-    originalPrice: 600,
-    duration: '24 hours',
-    sampleType: 'Blood',
-    category: 'diabetes',
-    fasting: false,
-  },
-  {
-    id: 'lft',
-    name: 'Liver Function Test (LFT)',
-    description: 'Comprehensive liver health assessment measuring enzymes and proteins',
-    fullDescription: `Liver Function Test (LFT) is a panel of blood tests that measure various enzymes, proteins, and substances produced or processed by the liver. This test helps evaluate liver health, detect liver damage, and monitor liver disease progression or treatment effectiveness.`,
-    clinicalSignificance: `Critical for diagnosing liver diseases including hepatitis, cirrhosis, and fatty liver disease. Helps monitor medication side effects on liver, assess liver damage from alcohol, and evaluate overall liver function before surgeries.`,
-    preparation: [
-      'Fasting for 8-12 hours recommended',
-      'Avoid alcohol for 24 hours before test',
-      'Inform about all medications and supplements',
-      'Stay well hydrated',
-    ],
-    normalRange: 'ALT: 7-56 U/L, AST: 10-40 U/L, Bilirubin: 0.1-1.2 mg/dL, Albumin: 3.5-5.5 g/dL',
-    price: 550,
-    originalPrice: 800,
-    duration: '12 hours',
-    sampleType: 'Blood',
-    category: 'blood',
-    fasting: true,
-  },
-  {
-    id: 'kft',
-    name: 'Kidney Function Test (KFT)',
-    description: 'Renal health evaluation measuring creatinine and urea levels',
-    fullDescription: `Kidney Function Test (KFT) measures how well your kidneys are filtering waste from your blood. It includes tests for creatinine, blood urea nitrogen (BUN), and electrolytes. This comprehensive panel helps detect kidney disease early and monitor kidney health.`,
-    clinicalSignificance: `Essential for detecting kidney disease, monitoring chronic kidney conditions, and assessing kidney function before starting certain medications. Helps evaluate dehydration, urinary tract problems, and overall kidney health.`,
-    preparation: [
-      'Fasting for 8-10 hours recommended',
-      'Avoid high-protein meals before test',
-      'Stay normally hydrated',
-      'Inform about medications affecting kidney function',
-    ],
-    normalRange: 'Creatinine: 0.7-1.3 mg/dL, BUN: 7-20 mg/dL, eGFR: >60 mL/min/1.73m²',
-    price: 500,
-    originalPrice: 750,
-    duration: '12 hours',
-    sampleType: 'Blood',
-    category: 'blood',
-    fasting: true,
-  },
-  {
-    id: 'vitd',
-    name: 'Vitamin D Test',
-    description: 'Vitamin D level measurement for bone health and immunity',
-    fullDescription: `Vitamin D test measures the level of vitamin D in your blood, which is essential for bone health, immune function, and overall wellbeing. Vitamin D deficiency is common and can lead to various health problems including weak bones, fatigue, and increased infection risk.`,
-    clinicalSignificance: `Important for diagnosing vitamin D deficiency, monitoring supplementation effectiveness, and assessing risk for osteoporosis and bone disorders. Helps evaluate causes of fatigue, muscle weakness, and frequent infections.`,
-    preparation: [
-      'No fasting required',
-      'Can be done at any time',
-      'Inform about vitamin D supplements',
-      'Continue regular medications',
-    ],
-    normalRange: 'Sufficient: 30-100 ng/mL, Insufficient: 20-30 ng/mL, Deficient: <20 ng/mL',
-    price: 800,
-    originalPrice: 1200,
-    duration: '24 hours',
-    sampleType: 'Blood',
-    category: 'hormone',
-    fasting: false,
-  },
-  {
-    id: 'vitb12',
-    name: 'Vitamin B12 Test',
-    description: 'B12 level assessment for nerve function and red blood cell production',
-    fullDescription: `Vitamin B12 test measures the amount of vitamin B12 in your blood. This vitamin is crucial for nerve function, red blood cell formation, and DNA synthesis. Deficiency can cause anemia, nerve damage, and cognitive problems.`,
-    clinicalSignificance: `Essential for diagnosing pernicious anemia, evaluating causes of fatigue and weakness, and monitoring B12 supplementation. Particularly important for vegetarians, elderly, and those with digestive disorders.`,
-    preparation: [
-      'Fasting for 6-8 hours recommended',
-      'Avoid B12 supplements for 24 hours before test',
-      'Continue regular medications',
-      'Can be combined with other blood tests',
-    ],
-    normalRange: 'Normal: 200-900 pg/mL, Borderline: 200-300 pg/mL, Deficient: <200 pg/mL',
-    price: 600,
-    originalPrice: 900,
-    duration: '24 hours',
-    sampleType: 'Blood',
-    category: 'hormone',
-    fasting: true,
-  },
-  {
-    id: 'cardiac',
-    name: 'Cardiac Risk Markers',
-    description: 'Advanced heart disease risk assessment including CRP and homocysteine',
-    fullDescription: `Cardiac Risk Markers test includes advanced biomarkers like high-sensitivity C-reactive protein (hs-CRP), homocysteine, and lipoprotein(a) that help assess cardiovascular disease risk beyond standard cholesterol tests. These markers provide early warning signs of heart disease.`,
-    clinicalSignificance: `Critical for identifying individuals at high risk for heart attack and stroke, even with normal cholesterol levels. Helps guide aggressive preventive treatment and lifestyle modifications for cardiovascular health.`,
-    preparation: [
-      'Fasting for 9-12 hours required',
-      'Avoid strenuous exercise for 24 hours',
-      'No alcohol for 24 hours before test',
-      'Inform about recent infections or inflammation',
-    ],
-    normalRange: 'hs-CRP: <1.0 mg/L (low risk), Homocysteine: 5-15 μmol/L, Lp(a): <30 mg/dL',
-    price: 1200,
-    originalPrice: 1800,
-    duration: '24 hours',
-    sampleType: 'Blood',
-    category: 'cardiac',
-    fasting: true,
-  },
-  {
-    id: 'fbs',
-    name: 'Fasting Blood Sugar (FBS)',
-    description: 'Basic glucose level measurement for diabetes screening',
-    fullDescription: `Fasting Blood Sugar (FBS) test measures your blood glucose level after an overnight fast. It's a simple yet effective screening tool for diabetes and prediabetes. This test helps identify how well your body regulates blood sugar levels.`,
-    clinicalSignificance: `Essential first-line test for diabetes screening and diagnosis. Helps monitor blood sugar control in diabetics and assess risk for developing diabetes. Quick and cost-effective way to evaluate glucose metabolism.`,
-    preparation: [
-      'Fasting for 8-10 hours mandatory',
-      'Only water allowed during fasting',
-      'Take diabetes medications after test',
-      'Schedule test in early morning',
-    ],
-    normalRange: 'Normal: 70-100 mg/dL, Prediabetes: 100-125 mg/dL, Diabetes: ≥126 mg/dL',
-    price: 100,
-    originalPrice: 150,
-    duration: '2 hours',
-    sampleType: 'Blood',
-    category: 'diabetes',
-    fasting: true,
-  },
-  {
-    id: 'uric',
-    name: 'Uric Acid Test',
-    description: 'Uric acid level measurement for gout and kidney stone risk',
-    fullDescription: `Uric Acid test measures the amount of uric acid in your blood. High levels can lead to gout, kidney stones, and may indicate kidney problems. This test helps diagnose and monitor conditions related to uric acid metabolism.`,
-    clinicalSignificance: `Important for diagnosing gout, monitoring treatment effectiveness, and assessing kidney stone risk. Helps evaluate kidney function and guide dietary modifications for uric acid management.`,
-    preparation: [
-      'Fasting for 4-6 hours recommended',
-      'Avoid high-purine foods for 24 hours',
-      'Stay well hydrated',
-      'Inform about medications affecting uric acid',
-    ],
-    normalRange: 'Men: 3.4-7.0 mg/dL, Women: 2.4-6.0 mg/dL',
-    price: 250,
-    originalPrice: 400,
-    duration: '6 hours',
-    sampleType: 'Blood',
-    category: 'blood',
-    fasting: true,
-  },
-  {
-    id: 'iron',
-    name: 'Iron Studies',
-    description: 'Comprehensive iron level assessment including ferritin and TIBC',
-    fullDescription: `Iron Studies is a panel of tests that measure iron levels in your blood, including serum iron, ferritin, transferrin, and total iron-binding capacity (TIBC). This comprehensive test helps diagnose iron deficiency anemia and iron overload conditions.`,
-    clinicalSignificance: `Essential for diagnosing different types of anemia, monitoring iron supplementation, and detecting iron overload disorders like hemochromatosis. Helps evaluate causes of fatigue and weakness related to iron imbalance.`,
-    preparation: [
-      'Fasting for 8-12 hours recommended',
-      'Avoid iron supplements for 24 hours',
-      'Schedule test in morning for accurate results',
-      'Inform about recent blood transfusions',
-    ],
-    normalRange: 'Serum Iron: 60-170 mcg/dL, Ferritin: 12-300 ng/mL, TIBC: 250-450 mcg/dL',
-    price: 700,
-    originalPrice: 1000,
-    duration: '24 hours',
-    sampleType: 'Blood',
-    category: 'blood',
-    fasting: true,
-  },
+  { id: 'cbc', name: 'Complete Blood Count (CBC)', description: 'Full blood cell analysis', price: 350, duration: '6 hours', sampleType: 'Blood', category: 'blood', fasting: false },
+  { id: 'lft', name: 'Liver Function Test (LFT)', description: 'Liver enzymes & proteins', price: 550, duration: '12 hours', sampleType: 'Blood', category: 'blood', fasting: true },
+  { id: 'kft', name: 'Kidney Function Test (KFT)', description: 'Kidney health markers', price: 500, duration: '12 hours', sampleType: 'Blood', category: 'blood', fasting: true },
+  { id: 'iron', name: 'Iron Studies', description: 'Iron, ferritin & TIBC', price: 700, duration: '24 hours', sampleType: 'Blood', category: 'blood', fasting: true },
+  { id: 'thyroid', name: 'Thyroid Profile (T3,T4,TSH)', description: 'Thyroid hormone levels', price: 450, duration: '24 hours', sampleType: 'Blood', category: 'thyroid', fasting: true },
+  { id: 'vitd', name: 'Vitamin D Test', description: 'Vitamin D level for bones & immunity', price: 800, duration: '24 hours', sampleType: 'Blood', category: 'vitamin', fasting: false },
+  { id: 'vitb12', name: 'Vitamin B12 Test', description: 'B12 for nerves & blood cells', price: 600, duration: '24 hours', sampleType: 'Blood', category: 'vitamin', fasting: true },
+  { id: 'hba1c', name: 'HbA1c', description: '3-month average blood sugar', price: 400, duration: '24 hours', sampleType: 'Blood', category: 'diabetes', fasting: false },
+  { id: 'fbs', name: 'Fasting Blood Sugar (FBS)', description: 'Fasting glucose level', price: 100, duration: '2 hours', sampleType: 'Blood', category: 'diabetes', fasting: true },
+  { id: 'lipid', name: 'Lipid Profile', description: 'Cholesterol & triglycerides', price: 500, duration: '12 hours', sampleType: 'Blood', category: 'cardiac', fasting: true },
+  { id: 'cardiac', name: 'Cardiac Risk Markers', description: 'hs-CRP, homocysteine', price: 1200, duration: '24 hours', sampleType: 'Blood', category: 'cardiac', fasting: true },
+  { id: 'uric', name: 'Uric Acid Test', description: 'Gout & kidney stone risk', price: 250, duration: '6 hours', sampleType: 'Blood', category: 'blood', fasting: true },
+  { id: 'psa', name: 'PSA (Prostate Specific Antigen)', description: 'Prostate health screening', price: 650, duration: '24 hours', sampleType: 'Blood', category: 'cancer', fasting: false },
+  { id: 'ca125', name: 'CA-125', description: 'Ovarian cancer marker', price: 900, duration: '24 hours', sampleType: 'Blood', category: 'cancer', fasting: false },
+  { id: 'crp', name: 'C-Reactive Protein (CRP)', description: 'Inflammation marker', price: 400, duration: '12 hours', sampleType: 'Blood', category: 'infection', fasting: false },
+  { id: 'iga', name: 'IgE (Allergy Panel)', description: 'Allergy screening', price: 1200, duration: '48 hours', sampleType: 'Blood', category: 'allergy', fasting: false },
+  { id: 'beta-hcg', name: 'Beta-hCG', description: 'Pregnancy confirmation', price: 350, duration: '6 hours', sampleType: 'Blood', category: 'pregnancy', fasting: false },
+  { id: 'calcium', name: 'Calcium & Bone Profile', description: 'Bone health markers', price: 600, duration: '12 hours', sampleType: 'Blood', category: 'bone', fasting: true },
 ];
 
-// Dummy labs
+// ── Dummy Labs ──────────────────────────────────────────────────────────────
 const labs = [
-  { id: '1', name: 'Lab A', location: 'City A', rating: 4.5 },
-  { id: '2', name: 'Lab B', location: 'City B', rating: 4.7 },
-  { id: '3', name: 'Lab C', location: 'City C', rating: 4.2 },
-  { id: '4', name: 'Lab D', location: 'City D', rating: 4.9 },
-  { id: '5', name: 'Lab E', location: 'City E', rating: 4.6 },
-  { id: '6', name: 'Lab F', location: 'City F', rating: 4.8 },
-  { id: '7', name: 'Lab G', location: 'City G', rating: 4.3 },
-  { id: '8', name: 'Lab H', location: 'City H', rating: 4.4 },
-  { id: '9', name: 'Lab I', location: 'City I', rating: 4.1 },
-  { id: '10', name: 'Lab J', location: 'City J', rating: 4.0 },
-];
-
-// Dummy popular combinations
-const popularCombinations = [
-  {
-    id: '1',
-    name: 'Basic Checkup',
-    description: 'Essential health screening',
-    tests: ['cbc', 'thyroid', 'lipid'],
-    price: 1200,
-    savings: 300,
-    popularity: '5000+ users',
-  },
-  {
-    id: '2',
-    name: 'Diabetes Package',
-    description: 'Comprehensive diabetes monitoring',
-    tests: ['hba1c', 'fbs'],
-    price: 500,
-    savings: 100,
-    popularity: '3000+ users',
-  },
-  // Add more if needed
+  { id: '1', name: 'Apollo Diagnostics', location: 'Mumbai Central', rating: 4.8, extraFee: 200 },
+  { id: '2', name: 'Dr. Lal PathLabs', location: 'Delhi NCR', rating: 4.7, extraFee: 150 },
+  { id: '3', name: 'Thyrocare', location: 'Bangalore', rating: 4.6, extraFee: 100 },
+  { id: '4', name: 'SRL Diagnostics', location: 'Hyderabad', rating: 4.5, extraFee: 250 },
+  { id: '5', name: 'Metropolis Healthcare', location: 'Pune', rating: 4.9, extraFee: 300 },
+  { id: '6', name: 'Pathkind Labs', location: 'Chennai', rating: 4.4, extraFee: 180 },
+  { id: '7', name: 'Redcliffe Labs', location: 'Kolkata', rating: 4.6, extraFee: 220 },
+  { id: '8', name: 'Healthians', location: 'Ahmedabad', rating: 4.7, extraFee: 120 },
+  { id: '9', name: '1mg Labs', location: 'Jaipur', rating: 4.5, extraFee: 280 },
+  { id: '10', name: 'Orange Health Labs', location: 'Lucknow', rating: 4.8, extraFee: 160 },
 ];
 
 const CustomPackage = () => {
@@ -361,32 +628,40 @@ const CustomPackage = () => {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showLabSelection, setShowLabSelection] = useState(false);
   const [selectedLab, setSelectedLab] = useState(null);
+  const [showBookingConfirmation, setShowBookingConfirmation] = useState(false);
 
+  // ── Categories ─────────────────────────────────────────────────────────────
   const categories = [
-    { id: 'all', name: 'All Tests', icon: 'Grid3x3', count: tests.length },
-    ...[...new Set(tests.map((test) => test.category))].map(category => ({
-      id: category,
-      name: category.charAt(0).toUpperCase() + category.slice(1),
-      icon: 'TestTube',
-      count: tests.filter(test => test.category === category).length,
+    { id: 'all', name: 'All Tests', count: tests.length },
+    ...[...new Set(tests.map(t => t.category))].map(cat => ({
+      id: cat,
+      name: cat.charAt(0).toUpperCase() + cat.slice(1),
+      count: tests.filter(t => t.category === cat).length,
     })),
   ];
 
+  // ── Filter Tests ───────────────────────────────────────────────────────────
   useEffect(() => {
-    let filtered = tests;
+    let result = tests;
     if (activeCategory !== 'all') {
-      filtered = filtered.filter(test => test.category === activeCategory);
+      result = result.filter(t => t.category === activeCategory);
     }
-    if (searchQuery) {
-      filtered = filtered.filter(test => test.name.toLowerCase().includes(searchQuery.toLowerCase()));
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      result = result.filter(t =>
+        t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q)
+      );
     }
-    setFilteredTests(filtered);
+    setFilteredTests(result);
   }, [activeCategory, searchQuery]);
 
-  const handleSearch = (query: string) => {
+  const handleSearch = (query) => {
     setSearchQuery(query);
-    if (query) {
-      const results = tests.filter(test => test.name.toLowerCase().includes(query.toLowerCase())).slice(0, 5);
+    if (query.trim()) {
+      const q = query.toLowerCase();
+      const results = tests.filter(t =>
+        t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q)
+      ).slice(0, 5);
       setSuggestions(results);
     } else {
       setSuggestions([]);
@@ -394,16 +669,20 @@ const CustomPackage = () => {
   };
 
   const handleSuggestionClick = (test) => {
-    handleTestToggle(test.id);
+    if (!selectedTests.includes(test.id)) {
+      setSelectedTests([...selectedTests, test.id]);
+    }
     setSearchQuery('');
     setSuggestions([]);
   };
 
-  const handleTestToggle = (testId: string) => {
-    setSelectedTests(prev => prev.includes(testId) ? prev.filter(id => id !== testId) : [...prev, testId]);
+  const handleTestToggle = (testId) => {
+    setSelectedTests(prev =>
+      prev.includes(testId) ? prev.filter(id => id !== testId) : [...prev, testId]
+    );
   };
 
-  const handleRemoveTest = (testId: string) => {
+  const handleRemoveTest = (testId) => {
     setSelectedTests(prev => prev.filter(id => id !== testId));
   };
 
@@ -425,25 +704,25 @@ const CustomPackage = () => {
 
   const handleBookTests = () => {
     if (!selectedLab) {
-      alert('Please select a lab');
+      alert('Please select a lab first');
       return;
     }
-    // Simulate booking - you can add actual logic here (e.g., add to cart)
-    alert(`Tests booked at ${selectedLab.name}!`);
     setShowLabSelection(false);
-    setSelectedTests([]);
+    setShowBookingConfirmation(true);
+  };
+
+  const getTotalTestsPrice = () => {
+    return selectedTests.reduce((sum, id) => {
+      const test = tests.find(t => t.id === id);
+      return sum + (test ? test.price : 0);
+    }, 0);
   };
 
   const getRecommendations = () => {
-    return tests.filter(test => !selectedTests.includes(test.id)).slice(0, 3).map(test => ({
-      ...test,
-      reason: 'Commonly added with your selections',
-    }));
-  };
-
-  const handleAddCombination = (combo) => {
-    const newTestIds = combo.tests.filter(id => !selectedTests.includes(id));
-    setSelectedTests([...selectedTests, ...newTestIds]);
+    return tests
+      .filter(t => !selectedTests.includes(t.id))
+      .slice(0, 3)
+      .map(t => ({ ...t, reason: 'Commonly added with your selections' }));
   };
 
   const handleTestInfo = (test) => {
@@ -451,39 +730,230 @@ const CustomPackage = () => {
     setShowInfoModal(true);
   };
 
-  if (showLabSelection) {
+  // ── Reusable Price Renderer (matches your screenshot style) ────────────────
+  const renderPrice = (currentPrice, originalPrice = null) => {
+    if (!originalPrice || originalPrice <= currentPrice) {
+      return (
+        <span className="text-xl md:text-2xl font-bold text-[#0A7DCF]">
+          ₹{currentPrice.toLocaleString()}
+        </span>
+      );
+    }
+
+    const discountPercent = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+
+    return (
+      <div className="flex flex-col items-start">
+        <div className="flex items-baseline gap-2">
+          <span className="text-xl md:text-2xl font-bold text-[#0A7DCF]">
+            ₹{currentPrice.toLocaleString()}
+          </span>
+          <span className="text-sm md:text-base text-gray-500 line-through">
+            ₹{originalPrice.toLocaleString()}
+          </span>
+        </div>
+        <span className="text-sm md:text-base font-medium text-green-600">
+          {discountPercent}% OFF
+        </span>
+      </div>
+    );
+  };
+
+  // ── Booking Confirmation Page ──────────────────────────────────────────────
+  if (showBookingConfirmation) {
+    const testsTotal = getTotalTestsPrice();
+    const labFee = selectedLab.extraFee || 0;
+    const totalBeforeDiscount = testsTotal + labFee;
+    const discountPercent = Math.floor(Math.random() * 11) + 5; // 5–15%
+    const discountAmount = Math.round(totalBeforeDiscount * (discountPercent / 100));
+    const finalAmount = totalBeforeDiscount - discountAmount;
+
     return (
       <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-7xl mx-auto px-4">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Select a Lab</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {labs.map(lab => (
-              <div
-                key={lab.id}
-                onClick={() => handleLabSelect(lab)}
-                className={`cursor-pointer p-6 bg-white rounded-xl shadow-md border-2 ${
-                  selectedLab?.id === lab.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
-                } hover:shadow-lg transition`}
-              >
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{lab.name}</h3>
-                <p className="text-sm text-gray-600 mb-2">{lab.location}</p>
-                <p className="text-sm text-gray-600">Rating: {lab.rating}</p>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10">
+            {/* Success Message */}
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
+                <CheckCircle className="w-12 h-12 text-green-600" />
               </div>
-            ))}
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Booking Confirmed!
+              </h1>
+              <p className="text-lg text-gray-600">
+                Thank you for choosing us. Your booking has been recorded successfully.
+              </p>
+            </div>
+
+            {/* Selected Lab */}
+            <div className="bg-gray-50 rounded-xl p-6 mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Selected Lab</h2>
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-xl font-semibold">{selectedLab.name}</h3>
+                  <p className="text-gray-600">{selectedLab.location}</p>
+                  <div className="flex items-center mt-2">
+                    <Star className="w-5 h-5 text-yellow-400 fill-current" />
+                    <span className="ml-1 font-medium">{selectedLab.rating}</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm text-gray-600">Lab Service Fee</p>
+                  <p className="text-xl font-bold text-[#0A7DCF]">₹{labFee.toLocaleString()}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Selected Tests */}
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Selected Tests</h2>
+              <div className="space-y-4">
+                {selectedTests.map(id => {
+                  const test = tests.find(t => t.id === id);
+                  if (!test) return null;
+                  return (
+                    <div key={id} className="flex justify-between items-center border-b pb-3">
+                      <div>
+                        <p className="font-medium">{test.name}</p>
+                        <p className="text-sm text-gray-600">{test.description}</p>
+                      </div>
+                      {renderPrice(test.price, test.price * 2)}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Pricing Summary */}
+            <div className="bg-gray-50 rounded-xl p-6 mb-10">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Payment Summary</h2>
+              <div className="space-y-4">
+                <div className="flex justify-between text-lg">
+                  <span>Tests Total:</span>
+                  <span>₹{testsTotal.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-lg">
+                  <span>Lab Service Fee:</span>
+                  <span>₹{labFee.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-lg font-bold border-t pt-4">
+                  <span>Total Before Discount:</span>
+                  <span>₹{totalBeforeDiscount.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-lg text-green-600">
+                  <span>Discount ({discountPercent}%):</span>
+                  <span>-₹{discountAmount.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-2xl font-bold border-t pt-4">
+                  <span>Final Amount:</span>
+                  <span className="text-[#0EB39C]">₹{finalAmount.toLocaleString()}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => {
+                  alert("Payment gateway simulation: Payment of ₹" + finalAmount + " successful!");
+                  navigate('/');
+                }}
+                className="bg-[#0EB39C] text-white px-10 py-4 rounded-xl font-bold hover:bg-green-700 transition"
+              >
+                Proceed to Pay ₹{finalAmount.toLocaleString()}
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowBookingConfirmation(false);
+                  setSelectedLab(null);
+                }}
+                className="px-10 py-4 bg-gray-200 text-gray-800 rounded-xl font-bold hover:bg-gray-300 transition"
+              >
+                Back to Lab Selection
+              </button>
+            </div>
           </div>
-          <div className="mt-8 flex justify-center gap-4">
+        </div>
+      </div>
+    );
+  }
+
+  // ── Lab Selection Screen ───────────────────────────────────────────────────
+  if (showLabSelection) {
+    const testsTotal = getTotalTestsPrice();
+
+    return (
+      <div className="min-h-screen bg-gray-50 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-10 text-center">
+            Choose a Lab
+          </h1>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {labs.map(lab => {
+              const finalAmount = testsTotal + lab.extraFee;
+              const discountPercent = Math.floor(Math.random() * 11) + 5;
+              const discountAmount = Math.round(finalAmount * (discountPercent / 100));
+              const payable = finalAmount - discountAmount;
+
+              return (
+                <div
+                  key={lab.id}
+                  onClick={() => handleLabSelect(lab)}
+                  className={`p-6 bg-white rounded-xl shadow-md border-2 cursor-pointer transition-all hover:shadow-lg ${
+                    selectedLab?.id === lab.id
+                      ? 'border-blue-600 bg-blue-50'
+                      : 'border-gray-200 hover:border-blue-300'
+                  }`}
+                >
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">{lab.name}</h3>
+                  <p className="text-sm text-gray-600 mb-2">{lab.location}</p>
+                  <div className="flex items-center mb-3">
+                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                    <span className="ml-1 text-sm font-medium">{lab.rating}</span>
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t">
+                    <p className="text-sm text-gray-600">Tests Total</p>
+                    <p className="text-lg font-bold text-gray-900">₹{testsTotal.toLocaleString()}</p>
+
+                    <p className="text-sm text-gray-600 mt-2">Lab Fee</p>
+                    <p className="text-lg font-bold text-gray-900">₹{lab.extraFee.toLocaleString()}</p>
+
+                    <p className="text-sm text-gray-600 mt-2">Final Amount</p>
+                    <p className="text-xl font-bold text-[#0A7DCF]">₹{finalAmount.toLocaleString()}</p>
+
+                    <p className="text-sm text-green-600 mt-1">
+                      {discountPercent}% OFF → Save ₹{discountAmount.toLocaleString()}
+                    </p>
+                    <p className="text-base font-bold text-green-700 mt-1">
+                      Pay only ₹{payable.toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4">
             <button
               onClick={handleBookTests}
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={!selectedLab}
+              className={`px-10 py-4 rounded-xl font-bold text-white transition ${
+                selectedLab
+                  ? 'bg-blue-600 hover:bg-blue-700'
+                  : 'bg-gray-400 cursor-not-allowed'
+              }`}
             >
               Proceed to Book the Tests
             </button>
+
             <button
               onClick={() => setShowLabSelection(false)}
-              className="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-medium hover:bg-gray-300 transition"
+              className="px-10 py-4 bg-gray-200 text-gray-800 rounded-xl font-bold hover:bg-gray-300 transition"
             >
-              Back
+              Back to Tests
             </button>
           </div>
         </div>
@@ -491,39 +961,92 @@ const CustomPackage = () => {
     );
   }
 
+  // ── Main Page ──────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-7xl mx-auto px-4">
-        <h1 className="text-4xl font-bold text-gray-900 mb-12 text-center">Build Your Custom Package</h1>
-        <SearchBar onSearch={handleSearch} suggestions={suggestions} onSuggestionClick={handleSuggestionClick} />
-        <CategoryFilter categories={categories} activeCategory={activeCategory} onCategoryChange={setActiveCategory} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-12 text-center">
+          Build Your Custom Health Package
+        </h1>
+
+        {/* Search */}
+        <SearchBar
+          onSearch={handleSearch}
+          suggestions={suggestions}
+          onSuggestionClick={handleSuggestionClick}
+        />
+
+        {/* Categories */}
+        <div className="mb-10">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-5">
+            Browse by Category
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {categories.map(cat => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={`px-5 py-2.5 rounded-full font-medium transition-all ${
+                  activeCategory === cat.id
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                {cat.name} ({cat.count})
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Recommendations */}
         {selectedTests.length > 0 && (
-          <RecommendationSection recommendations={getRecommendations()} onAddTest={handleTestToggle} />
+          <RecommendationSection
+            recommendations={getRecommendations()}
+            onAddTest={(test) => handleTestToggle(test.id)}
+          />
         )}
-        <PopularCombinations combinations={popularCombinations} onAddCombination={handleAddCombination} />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {filteredTests.length === 0 ? (
-            <p className="col-span-full text-center text-gray-600 py-12">No tests found. Try a different search or category.</p>
-          ) : (
-            filteredTests.map(test => (
-              <TestCard
-                key={test.id}
-                test={test}
-                isSelected={selectedTests.includes(test.id)}
-                onToggle={() => handleTestToggle(test.id)}
-                onInfoClick={() => handleTestInfo(test)}
-              />
-            ))
-          )}
+
+        {/* Test Grid */}
+        <div className="lg:grid lg:grid-cols-4 lg:gap-8">
+          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 lg:mb-0">
+            {filteredTests.length === 0 ? (
+              <div className="col-span-full text-center py-20 text-gray-600 text-lg">
+                No tests found matching your search or category.
+              </div>
+            ) : (
+              filteredTests.map(test => (
+                <TestCard
+                  key={test.id}
+                  test={{
+                    ...test,
+                    originalPrice: test.price * 2, // Simulate original price for discount
+                  }}
+                  isSelected={selectedTests.includes(test.id)}
+                  onToggle={() => handleTestToggle(test.id)}
+                  onInfoClick={() => handleTestInfo(test)}
+                  renderPrice={renderPrice} // Pass the helper function to TestCard
+                />
+              ))
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-1 sticky top-24 self-start">
+            <SelectedTestsSidebar
+              selectedTests={selectedTests.map(id => tests.find(t => t.id === id))}
+              onRemoveTest={handleRemoveTest}
+              onClearAll={handleClearAll}
+              onProceed={handleProceedNext}
+            />
+          </div>
         </div>
       </div>
-      <SelectedTestsSidebar
-        selectedTests={selectedTests.map(id => tests.find(t => t.id === id))}
-        onRemoveTest={handleRemoveTest}
-        onClearAll={handleClearAll}
-        onProceed={handleProceedNext}
+
+      <TestInfoModal
+        test={selectedTestInfo}
+        isOpen={showInfoModal}
+        onClose={() => setShowInfoModal(false)}
       />
-      <TestInfoModal test={selectedTestInfo} isOpen={showInfoModal} onClose={() => setShowInfoModal(false)} />
     </div>
   );
 };
