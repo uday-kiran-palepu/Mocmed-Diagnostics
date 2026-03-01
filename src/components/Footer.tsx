@@ -58,7 +58,7 @@ const Footer = () => {
                   Health Packages
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/upload" className="text-gray-400 hover:text-[#0A7DCF] transition-colors">
                   Upload Documents
                 </Link>
@@ -67,7 +67,7 @@ const Footer = () => {
                 <Link to="/reports" className="text-gray-400 hover:text-[#0A7DCF] transition-colors">
                   Download Reports
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link to="/terms" className="text-gray-400 hover:text-[#0A7DCF] transition-colors">
                   Terms & Conditions
