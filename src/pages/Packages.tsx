@@ -2498,35 +2498,8 @@ export default function Packages() {
                           {pkg.description}
                         </p>
 
-                        <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-xs mb-6">
-                          <div className="flex items-center gap-2">
-                            <TestTube className="w-4 h-4 text-[#0A7DCF]" />
-                            <span>{pkg.tests} Tests</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4 text-[#0A7DCF]" />
-                            <span>{pkg.reportTime}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Droplet className="w-4 h-4 text-[#0A7DCF]" />
-                            <span>{pkg.sampleType}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            {pkg.fastingRequired ? (
-                              <Coffee className="w-4 h-4 text-amber-600" />
-                            ) : (
-                              <CheckCircle className="w-4 h-4 text-green-600" />
-                            )}
-                            <span>{pkg.fastingRequired ? 'Fasting' : 'No Fasting'}</span>
-                          </div>
-                        </div>
-
-                        {pkg.homeCollection && (
-                          <div className="flex items-center gap-2 text-green-700 bg-green-50 px-3 py-2 rounded-lg mb-5 text-xs font-medium">
-                            <Home className="w-4 h-4" />
-                            Free Home Collection
-                          </div>
-                        )}
+                        {/* Hiding tests hours, blood, fasting, home collection from card */}
+                        {/* They will be shown in modal */}
 
                         <div className="mt-auto">
                           <div className="flex items-baseline gap-2 mb-4">
@@ -2726,7 +2699,55 @@ export default function Packages() {
                 </button>
               </div>
               <div className="p-6 space-y-6">
+                {/* Image in modal */}
+                <div className="relative h-48 overflow-hidden rounded-xl">
+                  <img
+                    src={UNIFIED_CARD_IMAGE}
+                    alt={selectedDetailPkg.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
                 <p className="text-gray-700">{selectedDetailPkg.description}</p>
+
+                {/* Additional info in modal */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-bold">Additional Information</h3>
+                  <p className="text-sm text-gray-600">
+                    This package includes comprehensive screening for various health parameters. It is recommended for annual check-ups or when experiencing symptoms related to {selectedDetailPkg.category.toLowerCase()}. Consult your doctor for personalized advice.
+                  </p>
+                </div>
+
+                {/* Hidden card info shown in modal */}
+                <div className="space-y-3 text-sm">
+                  <div className="flex items-center gap-2">
+                    <TestTube className="w-4 h-4 text-[#0A7DCF]" />
+                    <span>{selectedDetailPkg.tests} Tests</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-[#0A7DCF]" />
+                    <span>Report in {selectedDetailPkg.reportTime}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Droplet className="w-4 h-4 text-[#0A7DCF]" />
+                    <span>{selectedDetailPkg.sampleType}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {selectedDetailPkg.fastingRequired ? (
+                      <Coffee className="w-4 h-4 text-amber-600" />
+                    ) : (
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    )}
+                    <span>{selectedDetailPkg.fastingRequired ? 'Fasting Required' : 'No Fasting Needed'}</span>
+                  </div>
+                  {selectedDetailPkg.homeCollection && (
+                    <div className="flex items-center gap-2 text-green-700">
+                      <Home className="w-4 h-4" />
+                      <span>Free Home Collection Available</span>
+                    </div>
+                  )}
+                </div>
+
                 <div className="flex gap-4">
                   <button
                     onClick={() => {

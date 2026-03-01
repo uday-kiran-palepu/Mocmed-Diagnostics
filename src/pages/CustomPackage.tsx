@@ -1063,7 +1063,9 @@ import TestInfoModal from './components/TestInfoModal';
 import {
   Star,
   X,
+  ShoppingCart,
 } from 'lucide-react';
+
 // ── Test Data ───────────────────────────────────────────────────────────────
 const tests = [
   { id: 'cbc', name: 'Complete Blood Count (CBC)', description: 'Full blood cell analysis', price: 350, duration: '6 hours', sampleType: 'Blood', category: 'blood', fasting: false },
@@ -1085,6 +1087,7 @@ const tests = [
   { id: 'beta-hcg', name: 'Beta-hCG', description: 'Pregnancy confirmation', price: 350, duration: '6 hours', sampleType: 'Blood', category: 'pregnancy', fasting: false },
   { id: 'calcium', name: 'Calcium & Bone Profile', description: 'Bone health markers', price: 600, duration: '12 hours', sampleType: 'Blood', category: 'bone', fasting: true },
 ];
+
 // ── Labs ────────────────────────────────────────────────────────────────────
 const labs = [
   { id: '1', name: 'Apollo Diagnostics', location: 'Mumbai Central', rating: 4.8, extraFee: 200 },
@@ -1098,22 +1101,25 @@ const labs = [
   { id: '9', name: '1mg Labs', location: 'Jaipur', rating: 4.5, extraFee: 280 },
   { id: '10', name: 'Orange Health Labs', location: 'Lucknow', rating: 4.8, extraFee: 160 },
 ];
+
 const CustomPackage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  // Scroll to top on every navigation
+
+  // Scroll to top on every navigation / route change
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }, [location]);
-  const [selectedTests, setSelectedTests] = useState([]);
+
+  const [selectedTests, setSelectedTests] = useState<string[]>([]);
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredTests, setFilteredTests] = useState(tests);
-  const [suggestions, setSuggestions] = useState([]);
-  const [selectedTestInfo, setSelectedTestInfo] = useState(null);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [selectedTestInfo, setSelectedTestInfo] = useState<any>(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [showLabSelection, setShowLabSelection] = useState(false);
-  const [selectedLab, setSelectedLab] = useState(null);
+  const [selectedLab, setSelectedLab] = useState<any>(null);
   const [showBookingConfirmation, setShowBookingConfirmation] = useState(false);
   const [showFormModal, setShowFormModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -1125,6 +1131,7 @@ const CustomPackage = () => {
     altPhone: '',
     address: '',
   });
+
   // Categories
   const categories = [
     { id: 'all', name: 'All Tests', count: tests.length },
@@ -1134,6 +1141,7 @@ const CustomPackage = () => {
       count: tests.filter(t => t.category === cat).length,
     })),
   ];
+
   // Filter Tests
   useEffect(() => {
     let result = tests;
@@ -1146,7 +1154,8 @@ const CustomPackage = () => {
     }
     setFilteredTests(result);
   }, [activeCategory, searchQuery]);
-  const handleSearch = (query) => {
+
+  const handleSearch = (query: string) => {
     setSearchQuery(query);
     if (query.trim()) {
       const q = query.toLowerCase();
@@ -1158,55 +1167,71 @@ const CustomPackage = () => {
       setSuggestions([]);
     }
   };
-  const handleSuggestionClick = (test) => {
+
+  const handleSuggestionClick = (test: any) => {
     if (!selectedTests.includes(test.id)) {
       setSelectedTests([...selectedTests, test.id]);
     }
     setSearchQuery('');
     setSuggestions([]);
   };
-  const handleTestToggle = (testId) => {
+
+  const handleTestToggle = (testId: string) => {
     setSelectedTests(prev =>
       prev.includes(testId) ? prev.filter(id => id !== testId) : [...prev, testId]
     );
   };
-  const handleRemoveTest = (testId) => {
+
+  const handleRemoveTest = (testId: string) => {
     setSelectedTests(prev => prev.filter(id => id !== testId));
   };
+
   const handleClearAll = () => setSelectedTests([]);
+
   const handleProceedNext = () => {
     if (selectedTests.length === 0) {
       alert('Please select at least one test');
       return;
     }
+    window.scrollTo({ top: 0, behavior: 'instant' });
     setShowLabSelection(true);
   };
-  const handleLabSelect = (lab) => setSelectedLab(lab);
+
+  const handleLabSelect = (lab: any) => setSelectedLab(lab);
+
   const handleBookTests = () => {
     if (!selectedLab) {
       alert('Please select a lab first');
       return;
     }
+    window.scrollTo({ top: 0, behavior: 'instant' });
     setShowLabSelection(false);
     setShowBookingConfirmation(true);
   };
+
   const getTotalTestsPrice = () => {
     return selectedTests.reduce((sum, id) => {
       const test = tests.find(t => t.id === id);
       return sum + (test ? test.price : 0);
     }, 0);
   };
+
+  const totalPrice = getTotalTestsPrice();
+  const totalSelected = selectedTests.length;
+
   const getRecommendations = () => {
     return tests
       .filter(t => !selectedTests.includes(t.id))
       .slice(0, 3)
       .map(t => ({ ...t, reason: 'Commonly added with your selections' }));
   };
-  const handleTestInfo = (test) => {
+
+  const handleTestInfo = (test: any) => {
     setSelectedTestInfo(test);
     setShowInfoModal(true);
   };
-  const renderPrice = (currentPrice, originalPrice = null) => {
+
+  const renderPrice = (currentPrice: number, originalPrice: number | null = null) => {
     if (!originalPrice || originalPrice <= currentPrice) {
       return <span className="text-xl md:text-2xl font-bold text-[#0A7DCF]">₹{currentPrice.toLocaleString()}</span>;
     }
@@ -1221,7 +1246,8 @@ const CustomPackage = () => {
       </div>
     );
   };
-  const handleFormSubmit = (e) => {
+
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const bookingData = {
       customer: formData,
@@ -1235,6 +1261,7 @@ const CustomPackage = () => {
     };
     console.log("=== DATA READY FOR GOOGLE SHEETS ===", bookingData);
     alert("Order Placed Successfully! Data is in console (ready for Google Sheets).");
+
     // Reset
     setShowFormModal(false);
     setShowBookingConfirmation(false);
@@ -1242,6 +1269,7 @@ const CustomPackage = () => {
     setSelectedTests([]);
     setFormData({ name: '', email: '', age: '', gender: '', phone: '', altPhone: '', address: '' });
   };
+
   // ── Booking Confirmation Page ──────────────────────────────────────────────
   if (showBookingConfirmation) {
     const testsTotal = getTotalTestsPrice();
@@ -1250,16 +1278,19 @@ const CustomPackage = () => {
     const discountPercent = Math.floor(Math.random() * 11) + 5;
     const discountAmount = Math.round(totalBeforeDiscount * (discountPercent / 100));
     const finalAmount = totalBeforeDiscount - discountAmount;
+
     return (
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10">
             <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Booking Summary</h1>
+
             <div className="bg-gray-50 rounded-xl p-6 mb-8">
               <h2 className="text-2xl font-bold mb-4">Selected Lab</h2>
               <p className="text-xl text-[#0A7DCF]">{selectedLab?.name}</p>
               <p className="text-gray-600">{selectedLab?.location}</p>
             </div>
+
             <div className="mb-8">
               <h2 className="text-2xl font-bold mb-4">Selected Tests</h2>
               <div className="space-y-4">
@@ -1278,6 +1309,7 @@ const CustomPackage = () => {
                 })}
               </div>
             </div>
+
             <div className="bg-gray-50 rounded-xl p-6 mb-10">
               <h2 className="text-2xl font-bold mb-6">Payment Summary</h2>
               <div className="space-y-4">
@@ -1303,38 +1335,48 @@ const CustomPackage = () => {
                 </div>
               </div>
             </div>
+
             <div className="flex justify-center">
               <button
-                  onClick={() => navigate('/patient-details', {
+                onClick={() => {
+                  window.scrollTo({ top: 0, behavior: 'instant' });
+                  navigate('/patient-details', {
                     state: {
-                      selectedTests,                // all selected test IDs
-                      selectedLab,                  // chosen lab object
+                      selectedTests,
+                      selectedLab,
                       totalAmount: getTotalTestsPrice() + (selectedLab?.extraFee || 0)
                     }
-                  })}
-                  className="bg-[#0EB39C] text-white px-12 py-4 rounded-xl font-bold text-lg hover:bg-green-700 transition"
-                >
-                  Proceed to Pay
+                  });
+                }}
+                className="bg-[#0EB39C] text-white px-12 py-4 rounded-xl font-bold text-lg hover:bg-green-700 transition"
+              >
+                Re-Confirm Test Details
               </button>
             </div>
           </div>
         </div>
+
+        {/* Bottom bar NOT shown on confirmation page */}
       </div>
     );
   }
+
   // ── Lab Selection Page ─────────────────────────────────────────────────────
   if (showLabSelection) {
     const testsTotal = getTotalTestsPrice();
+
     return (
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-10 text-center">Choose a Lab</h1>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {labs.map(lab => {
               const finalAmount = testsTotal + lab.extraFee;
               const discountPercent = Math.floor(Math.random() * 11) + 5;
               const discountAmount = Math.round(finalAmount * (discountPercent / 100));
               const payable = finalAmount - discountAmount;
+
               return (
                 <div
                   key={lab.id}
@@ -1374,6 +1416,7 @@ const CustomPackage = () => {
               );
             })}
           </div>
+
           <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4">
             <button
               onClick={handleBookTests}
@@ -1386,16 +1429,22 @@ const CustomPackage = () => {
             </button>
 
             <button
-              onClick={() => setShowLabSelection(false)}
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                setShowLabSelection(false);
+              }}
               className="px-10 py-4 bg-gray-200 text-gray-800 rounded-xl font-bold hover:bg-gray-300 transition"
             >
               Back to Tests
             </button>
           </div>
         </div>
+
+        {/* NO bottom bar on lab selection page */}
       </div>
     );
   }
+
   // ── Main Page ──────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -1414,12 +1463,12 @@ const CustomPackage = () => {
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-5">
             Browse by Category
           </h2>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-2 sm:gap-3 overflow-x-auto pb-2">
             {categories.map(cat => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-5 py-2.5 rounded-full font-medium transition-all ${
+                className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-full font-medium transition-all flex-shrink-0 text-sm sm:text-base ${
                   activeCategory === cat.id
                     ? 'bg-blue-600 text-white shadow-md'
                     : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
@@ -1439,7 +1488,7 @@ const CustomPackage = () => {
         )}
 
         <div className="lg:grid lg:grid-cols-4 lg:gap-8">
-          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 lg:mb-0">
+          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24 lg:mb-0">
             {filteredTests.length === 0 ? (
               <div className="col-span-full text-center py-20 text-gray-600 text-lg">
                 No tests found matching your search or category.
@@ -1461,7 +1510,7 @@ const CustomPackage = () => {
             )}
           </div>
 
-          <div className="lg:col-span-1 sticky top-24 self-start">
+          <div className="hidden lg:block lg:col-span-1 sticky top-24 self-start">
             <SelectedTestsSidebar
               selectedTests={selectedTests.map(id => tests.find(t => t.id === id))}
               onRemoveTest={handleRemoveTest}
@@ -1471,6 +1520,29 @@ const CustomPackage = () => {
           </div>
         </div>
       </div>
+
+      {/* Sticky bottom bar – ONLY on main test selection page */}
+      {totalSelected > 0 && !showLabSelection && !showBookingConfirmation && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-2xl z-50 lg:hidden">
+          <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="bg-[#0EB39C] text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg">
+                {totalSelected}
+              </div>
+              <div>
+                <p className="font-semibold text-sm">₹{totalPrice.toLocaleString()}</p>
+                <p className="text-xs text-gray-600">{totalSelected} test{totalSelected !== 1 ? 's' : ''}</p>
+              </div>
+            </div>
+            <button
+              onClick={handleProceedNext}
+              className="bg-[#0EB39C] text-white px-6 py-3 rounded-xl font-medium shadow-md"
+            >
+              Proceed to Next
+            </button>
+          </div>
+        </div>
+      )}
 
       <TestInfoModal
         test={selectedTestInfo}
